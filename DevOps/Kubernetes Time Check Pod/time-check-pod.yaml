@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: time-check
+  name: time-check
+  namespace: datacenter
+spec:
+  volumes:
+  - hostPath:
+      path: /opt/itadmin/time
+      type: DirectoryOrCreate
+    name: log-volume
+
+  containers:
+  - name: time-check
+    image: busybox:latest
+    command: [ "/bin/sh", "-c", "while true; do date >> /opt/itadmin/time/time-check.log; sleep $(TIME_FREQ);done" ]
+    volumeMounts:
+    - name: log-volume
+      mountPath: /opt/itadmin/time
+    envFrom:
+      - configMapRef:
+          name: time-config
