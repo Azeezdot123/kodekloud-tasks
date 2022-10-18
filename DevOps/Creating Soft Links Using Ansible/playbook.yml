@@ -1,0 +1,39 @@
+---
+- hosts: stapp01, stapp02, stapp03
+  become: true
+  tasks:
+    - name: Create a soft link
+      file:
+        src: /opt/security
+        dest: /var/www/html
+        state: link
+        
+- hosts: stapp01
+  become: true
+  tasks:
+    - name: Create an Empty file
+      file:
+        path: /opt/security/blog.txt
+        state: touch
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      
+- hosts: stapp02
+  become: true
+  tasks:
+    - name: Create an Empty file
+      file:
+        path: /opt/security/story.txt
+        state: touch
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+- hosts: stapp03
+  become: true
+  tasks:
+    - name: Create an Empty file
+      file:
+        path: /opt/security/media.txt
+        state: touch
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
