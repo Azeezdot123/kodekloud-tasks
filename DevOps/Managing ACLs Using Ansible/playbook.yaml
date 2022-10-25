@@ -1,0 +1,48 @@
+---
+- hosts: stapp01
+  become: true
+  tasks:
+    - name: Create file
+      file:
+       path: /opt/data/blog.txt
+       state: touch
+       
+    - name: Grant User tony read access to the file
+      acl:
+       path: /opt/data/blog.txt
+       entity: "{{ ansible_user }}"
+       etype: group
+       permissions: r
+       state: present
+
+- hosts: stapp02
+  become: true
+  tasks:
+    - name: Create file
+      file:
+       path: /opt/data/story.txt
+       state: touch
+
+    - name: Grant User steve read and write access to the file
+      acl:
+       path: /opt/data/story.txt
+       entity: "{{ ansible_user }}"
+       etype: user
+       permissions: rw
+       state: present
+
+- hosts: stapp03
+  become: true
+  tasks:
+    - name: Create file
+      file:
+       path: /opt/data/media.txt
+       state: touch
+    
+    - name: Grant User banner read and write access to the file
+      acl:
+       path: /opt/data/media.txt
+       entity: "{{ ansible_user }}"
+       etype: group
+       permissions: rw
+       state: present
