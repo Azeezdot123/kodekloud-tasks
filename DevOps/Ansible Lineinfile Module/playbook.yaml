@@ -1,0 +1,37 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install httpd on all app servers
+      yum:
+        name: httpd
+        state: present
+
+    - name: Create httpd directory
+      file:
+        path: /var/www/html
+        state: directory
+        owner: apache
+        group: apache
+
+
+    - name: Create the idex.html file
+      copy:
+        content: "This is a Nautilus sample file, created using Ansible!"
+        dest: /var/www/html/index.html
+        mode: 0744
+    
+
+    - name: Edit index.html file
+      lineinfile:
+        path: /var/www/html/index.html
+        line: "Welcome to xFusionCorp Industries!"
+        insertbefore: BOF
+        state: present
+
+
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
