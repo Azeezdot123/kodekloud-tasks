@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  become_method: sudo
+  tasks:
+    - name: use Blockinline to create a file
+      blockinfile:
+        path: /root/facts.txt
+        create: yes
+        block: |
+          Ansible managed node IP is {{ ansible_default_ipv4.address }}
+
+    - name: Install httpd on all app servers
+      yum:
+        name: httpd
+        state: present
+
+    - name: Copy fact.txt to /var/www/html
+      shell: cp /root/facts.txt /var/www/html/index.html
+
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
