@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nagios-deployment
+  name: nagios-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nagios-deployment
+  template:
+    metadata:
+      labels:
+        app: nagios-deployment
+    spec:
+      containers:
+      - image: jasonrivers/nagios
+        name: nagios-container
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nagios-service
+  name: nagios-service
+spec:
+  selector:
+    app: nagios-deployment
+  type: NodePort
+  ports:
+  - name: nagios-port
+    port: 80
+    targetPort: 80
+    nodePort: 30008
+    protocol: TCP
