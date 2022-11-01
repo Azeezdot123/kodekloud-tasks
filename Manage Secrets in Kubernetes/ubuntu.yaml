@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+data:
+  beta: NWVjdXIzCg==
+kind: Secret
+metadata:
+  name: beta
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: secret-xfusion
+  name: secret-xfusion
+spec:
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: beta
+      # items:
+      # - key: beta
+      #   path: /opt/demo
+
+  containers:
+  - name: secret-container-xfusion
+    image: ubuntu:latest
+    command: [ "/bin/sh", "-c", "sleep 3600" ]
+    volumeMounts:
+    - name: secret-volume
+      mountPath: /opt/demo
